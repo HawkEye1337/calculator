@@ -1,93 +1,95 @@
-let equation = "";
-let num1 = "0";
-let num2 = "0";
-let op;
-let opEntered = false;
-let opIndex;
-let result = "";
-let j = 0;
-const operators = ["+", "×", "%", "+", "-"];
-const buttons = document.querySelectorAll(".btn");
-const screen = document.getElementById("screen");
-let displayValue = document.getElementById("screen").textContent;
-const output = document.getElementById("output");
+const upperDisplay = document.querySelector(".display-1");
+const centerDisplay = document.querySelector(".display-2");
+const tempResult = document.querySelector(".temp-result");
+const numbers = document.querySelectorAll(".number");
+const operators = document.querySelectorAll(".operator");
+const equal = document.querySelector(".equal");
+const clear = document.querySelector(".all-clear");
+const backspace = document.querySelector(".backspace");
 
-//operation functions
-function add(num1, num2) {
-  return +num1 + +num2;
-}
-function multiply(num1, num2) {
-  return +num1 * +num2;
-}
-function divide(num1, num2) {
-  if (num2 != 0) return +num1 / +num2;
-  else return "math error";
-}
-function subtract(num1, num2) {
-  return +num1 - +num2;
-}
-buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    if (button.dataset.type === "digit") {
-      displayValue += button.textContent;
-    } else if (button.dataset.type === "operator" && opEntered === false) {
-      displayValue += button.textContent;
-      num1 = displayValue.substring(0, displayValue.indexOf(button.textContent));
-      op = button.textContent;
-      opIndex = displayValue.indexOf(button.textContent);
-      opEntered = true;
-      console.log(num1);
-      console.log("working " + j++);
-    } else if (button.dataset.type === "operator" && opEntered === true) {
-      num2 = displayValue.substring(opIndex + 1, displayValue.length);
-      result = operate(num1, op, num2);
-      op = button.textContent;
-      output.textContent = result;
-      displayValue = result + op;
-      opEntered = false;
-      // num1 = displayValue.substring(0, displayValue.indexOf(button.textContent));
-    } else if (button.dataset.type === "equal") {
-      num2 = displayValue.substring(opIndex + 1, displayValue.length);
-      result = operate(num1, op, num2);
+let prevOperand = "";
+let nextOperand = "";
+let result = null;
+let operation = "";
+let dotExists = false;
+let sign = "";
 
-      output.textContent = result;
-    } else if (button.dataset.type === "clear") {
-      clear();
+numbers.forEach((number) => {
+  number.addEventListener("click", () => {
+    //check if the input is a dot and no dot was previously entered, if so, change dotExists to true
+    if (number.textContent === "." && !dotExists) {
+      dotExists = true;
+      //if a dot already exists return and don't add anything
+    } else if (number.textContent === "." && dotExists) {
+      return;
     }
-    updateScreen();
-    console.log("---------------------");
-    console.log("display: " + displayValue);
-    console.log("num1: " + num1);
-    console.log("op: " + op);
-    console.log("num2: " + num2);
-    console.log("result: " + result);
-    console.log("opEntered: " + opEntered);
+    prevOperand += number.textContent;
+    centerDisplay.textContent = prevOperand;
   });
 });
-//display on-screen when buttons are pressed
+operators.forEach((operator) => {
+  operator.addEventListener("click", () => {
+    if (!prevOperand) return;
+    dotExists = false;
+    sign = operator.textContent;
+    if (nextOperand && prevOperand && operation) {
+      result = doMath(nextOperand, operation, prevOperand);
+    } else {
+      result = parseFloat(prevOperand);
+    }
+    clearCenterDisplay(sign);
+    operation = sign;
+    console.log("result " + result);
+  });
+});
 
-function operate(num1, op, num2) {
-  switch (op) {
+//assigns prev operand value to next operand, display the value on upper then clear center and prev operand
+function clearCenterDisplay(sign) {
+  nextOperand = prevOperand + " " + sign + " ";
+  upperDisplay.textContent = nextOperand;
+  centerDisplay.textContent = "";
+  prevOperand = "";
+  tempResult.textContent = result;
+}
+function doMath(nextOperand, operation, prevOperand) {
+  switch (operation) {
     case "+":
-      return add(num1, num2);
-
+      return +nextOperand + +prevOperand;
     case "-":
-      return subtract(num1, num2);
-
-    case "×":
-      return multiply(num1, num2);
-
-    case "÷":
-      return divide(num1, num2);
+      return +nextOperand - +prevOperand;
+    case "x":
+      return +nextOperand * +prevOperand;
+    case "/":
+      if (prevOperand != 0) {
+        return +nextOperand / +prevOperand;
+      } else return "Error";
   }
 }
 
-function updateScreen() {
-  screen.textContent = displayValue;
+function allClear() {
+  nextOperand = "";
+  prevOperand = "";
+  result = null;
+  sign = "";
+  operation = "";
+  dotExists = false;
+  upperDisplay.textContent = "0";
+  centerDisplay.textContent = "0";
+  tempResult.textContent = "";
 }
-function clear() {
-  displayValue = "";
-  num1 = "0";
-  num2 = "0";
-  result = "";
-}
+clear.addEventListener("click", () => {
+  allClear();
+});
+
+equal.addEventListener("click", () => {
+  if (nextOperand && prevOperand && operation) {
+    result = doMath(nextOperand, operation, prevOperand);
+  } else {
+    result = parseFloat(prevOperand);
+  }
+  console.log("prev: " + prevOperand);
+  console.log("op: " + operation);
+  console.log("next: " + nextOperand);
+  console.log("result " + result);
+  tempResult.textContent = result;
+});

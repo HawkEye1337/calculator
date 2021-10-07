@@ -1,56 +1,67 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
   padding: 0;
-  font-family: "Quicksand", "Roboto", sans-serif;
-  background: rgb(73, 168, 81);
+  margin: 0;
+  box-sizing: border-box;
 }
-
-#calc-container {
-  height: 100vh;
-  width: 100vw;
+html {
+  font-family: "Montserrat", sans-serif;
+}
+section {
+  background-color: rgb(18, 26, 31);
+  min-height: 100vh;
+  width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-#calc {
-  /* width: 300px;
-  height: 600px; */
-  display: flex;
-  flex-direction: column;
-  border: 2px black solid;
   justify-content: center;
-  align-items: center;
-  width: 300px;
 }
-#screen-container {
-  width: 280px;
-  height: 80px;
-  border: 2px black solid;
-  margin-top: 10px;
+.container {
+  width: 90%;
+  max-width: 400px;
+  background-color: rgb(39, 55, 59);
+  border-radius: 8px;
+  overflow: hidden;
 }
-
-#screen,
-#output {
-  height: 50%;
-}
-#output {
+.display {
+  background-color: rgb(182, 182, 182);
+  height: 100px;
+  width: 100%;
   text-align: right;
+  padding: 20px;
+  font-size: 30px;
+  position: relative;
 }
-#buttons {
-  width: 95%;
+.display-1 {
+  opacity: 0.4;
+  font-size: 20px;
+  height: 20px;
+  overflow: hidden;
+}
+.temp-result {
+  position: absolute;
+  bottom: 0;
+  left: 10;
+  font-size: 20px;
+  opacity: 0.3;
+}
+.buttons {
+  color: whitesmoke;
+  display: grid;
+  grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+}
+.button {
+  border: 0.5px solid rgba(92, 92, 92, 0.137);
+  display: inline-block;
+  height: 100px;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  gap: 5%;
   align-items: center;
   justify-content: center;
-  padding: 5% 0;
+  font-size: 30px;
+  cursor: pointer;
 }
-.btn {
-  width: 20%;
-  height: 50px;
+.button:hover {
+  background-color: rgb(30, 43, 46);
 }
-
-.btn.btn-equal {
-  width: 45%;
+.btn-0 {
+  grid-column: 1/3;
 }
