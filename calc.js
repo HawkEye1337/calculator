@@ -33,36 +33,63 @@ operators.forEach((operator) => {
     dotExists = false;
     sign = operator.textContent;
     if (nextOperand && prevOperand && operation) {
-      result = doMath(nextOperand, operation, prevOperand);
+      doMath();
     } else {
       result = parseFloat(prevOperand);
     }
-    clearCenterDisplay(sign);
+    clearCenterDisplay();
     operation = sign;
-    console.log("result " + result);
   });
+});
+//when equal is pressed
+equal.addEventListener("click", () => {
+  console.log("prev before: " + prevOperand);
+  console.log("op: before " + operation);
+  console.log("next: before " + nextOperand);
+  if (!nextOperand || !prevOperand) return;
+  dotExists = false;
+  doMath();
+  clearCenterDisplay();
+  upperDisplay.textContent = result;
+  tempResult.textContent = "";
+  prevOperand = result;
+  nextOperand = "";
+
+  console.log("---------------------------");
+  console.log("prev: " + prevOperand);
+  console.log("op: " + operation);
+  console.log("next: " + nextOperand);
+  console.log("result " + result);
 });
 
 //assigns prev operand value to next operand, display the value on upper then clear center and prev operand
-function clearCenterDisplay(sign) {
+function clearCenterDisplay() {
   nextOperand = prevOperand + " " + sign + " ";
   upperDisplay.textContent = nextOperand;
   centerDisplay.textContent = "";
   prevOperand = "";
   tempResult.textContent = result;
 }
-function doMath(nextOperand, operation, prevOperand) {
+
+function doMath() {
   switch (operation) {
     case "+":
-      return +nextOperand + +prevOperand;
+      result = parseFloat(result) + parseFloat(prevOperand);
+      break;
     case "-":
-      return +nextOperand - +prevOperand;
+      result = parseFloat(result) - parseFloat(prevOperand);
+      break;
     case "x":
-      return +nextOperand * +prevOperand;
+      result = parseFloat(result) * parseFloat(prevOperand);
+      break;
     case "/":
       if (prevOperand != 0) {
-        return +nextOperand / +prevOperand;
-      } else return "Error";
+        result = parseFloat(result) / parseFloat(prevOperand);
+      } else result = "Error";
+      break;
+    case "%":
+      result = parseFloat(result) % parseFloat(prevOperand);
+      break;
   }
 }
 
@@ -79,17 +106,4 @@ function allClear() {
 }
 clear.addEventListener("click", () => {
   allClear();
-});
-
-equal.addEventListener("click", () => {
-  if (nextOperand && prevOperand && operation) {
-    result = doMath(nextOperand, operation, prevOperand);
-  } else {
-    result = parseFloat(prevOperand);
-  }
-  console.log("prev: " + prevOperand);
-  console.log("op: " + operation);
-  console.log("next: " + nextOperand);
-  console.log("result " + result);
-  tempResult.textContent = result;
 });
